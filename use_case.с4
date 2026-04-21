@@ -1,0 +1,86 @@
+@startuml
+' Настройки для читаемости
+left to right direction
+skinparam linetype ortho
+skinparam packageStyle rectangle
+skinparam actorStyle awesome
+
+' Порядок акторов важен для расположения на схеме
+actor "Ученик / Родитель" as Client #LightYellow
+actor "Преподаватель" as Teacher #LightGreen
+actor "Администратор" as Admin #LightBlue
+actor "Руководитель центра" as Director #LightCoral
+
+rectangle "CRM Образовательного центра" {
+  
+  usecase "Просмотр расписания" as UC_Schedule
+  usecase "Просмотр прогресса" as UC_Progress
+  usecase "Оплата курса" as UC_Pay
+  usecase "Оставить заявку" as UC_Request
+  usecase "Получение рассылки" as UC_ReceiveMailing
+  usecase "Общение с администратором" as UC_TalkClient
+
+  usecase "Ведение занятий" as UC_Teach
+  usecase "Отметка посещаемости" as UC_Attendance
+  usecase "Общение с администратором (преподаватель)" as UC_TalkTeacher
+
+  usecase "Регистрация преподавателя и ученика" as UC_Register
+  usecase "Управление пользователями" as UC_UserMgmt
+  usecase "Поиск ученика" as UC_Search
+  usecase "Запись ученика на занятие" as UC_Enroll
+  usecase "Отмена записи ученика" as UC_Cancel
+  usecase "Коммуникация с родителями" as UC_CommParent
+  usecase "Коммуникация с преподавателями" as UC_CommTeacher
+  usecase "Создание и отправка рассылки" as UC_Mailing
+  usecase "Просмотр общей отчётности" as UC_ReportAdmin
+
+  usecase "Управление курсами, группами и расписанием" as UC_Manage
+  usecase "Назначение и переназначение преподавателей" as UC_Assign
+  usecase "Просмотр общей отчётности" as UC_ReportDirector
+}
+
+' === Связи акторов с use case ===
+
+' Ученик / Родитель (слева)
+Client --> UC_Schedule
+Client --> UC_Progress
+Client --> UC_Pay
+Client --> UC_Request
+Client --> UC_ReceiveMailing
+Client --> UC_TalkClient
+
+' Преподаватель (слева-сверху)
+Teacher --> UC_Teach
+Teacher --> UC_Attendance
+Teacher --> UC_TalkTeacher
+Teacher --> UC_Search
+
+' Администратор (центр)
+Admin --> UC_Register
+Admin --> UC_UserMgmt
+Admin --> UC_Search
+Admin --> UC_Enroll
+Admin --> UC_Cancel
+Admin --> UC_CommParent
+Admin --> UC_CommTeacher
+Admin --> UC_Mailing
+Admin --> UC_ReportAdmin
+
+' Руководитель (справа)
+Director --> UC_Manage
+Director --> UC_Assign
+Director --> UC_ReportDirector
+
+' === Включения (include) ===
+UC_Attendance ..> UC_Teach : <<include>>
+UC_ReceiveMailing ..> UC_Mailing : <<include>>
+UC_TalkTeacher ..> UC_CommTeacher : <<include>>
+UC_TalkClient ..> UC_CommParent : <<include>>
+
+' === Поиск ученика используется ===
+UC_Attendance ..> UC_Search : <<include>>
+UC_Progress ..> UC_Search : <<include>>
+UC_Enroll ..> UC_Search : <<include>>
+UC_Cancel ..> UC_Search : <<include>>
+
+@enduml
